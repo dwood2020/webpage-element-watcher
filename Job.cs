@@ -1,0 +1,6 @@
+class Job {
+
+    public Job() {
+        
+    }
+}
