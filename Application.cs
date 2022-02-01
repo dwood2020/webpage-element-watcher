@@ -16,7 +16,10 @@ namespace Watcher {
 
         public void Run() {
 
-            Console.WriteLine("Hello, World!");
+            if (User != null && User.Name != null) {                
+                Console.WriteLine("Hello, {0}", User.Name);
+            }
+            Console.WriteLine("Mail: {0}", User?.Mail);
         }
     }
 }
