@@ -1,5 +1,6 @@
-﻿var app = new Application();
+﻿
+var app = ApplicationBuilder.BuildFromConfig(@"app.cfg");
 
-app.Configure("");
+app.Configure(@"app.cfg");
 app.Run();
 
