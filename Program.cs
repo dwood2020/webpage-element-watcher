@@ -1,8 +1,14 @@
-﻿using Watcher;
+﻿using System;
+using Watcher;
 
 
-var app = ApplicationBuilder.BuildFromConfig(@"app.cfg");
+try {
+    var app = ApplicationBuilder.BuildFromConfig(@"app.cfg");
+    app.Run();
+}
+catch(Exception e) {
+    Console.WriteLine(e.Message);
+}
 
-app.Configure(@"app.cfg");
-app.Run();
+
 

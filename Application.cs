@@ -12,11 +12,7 @@ namespace Watcher {
         public User? User { get; set; }
 
         public Application() { }
-
-
-        public void Configure(string configFilePath) {
-
-        }
+        
 
         public void Run() {
 
