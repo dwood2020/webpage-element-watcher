@@ -1,6 +1,11 @@
-class Job {
 
-    public Job() {
-        
+namespace Watcher {
+
+
+    class Job {
+
+        public Job() {
+
+        }
     }
 }

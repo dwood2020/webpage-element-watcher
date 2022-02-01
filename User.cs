@@ -1,8 +1,11 @@
-public class User {
+namespace Watcher {
 
-    public string Mail { get; set; }
+    public class User {
 
-    public User() {
-        Mail = "";
+        public string Mail { get; set; }
+
+        public User() {
+            Mail = "";
+        }
     }
 }
