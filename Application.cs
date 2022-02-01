@@ -5,6 +5,8 @@ public class Application {
     //TODO Get rid of this boolean later
     private bool isConfigured = false;
 
+    public long RunInterval { get; set; }
+
     public Application() { }
 
 
