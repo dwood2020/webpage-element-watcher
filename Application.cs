@@ -15,9 +15,11 @@ namespace Watcher {
 
         public List<Job>? Jobs { get; set; }
 
+        private List<Task> jobTasks;
+
 
         public Application() {
-            
+            jobTasks = new List<Task>();            
          }        
         
 
@@ -32,15 +34,17 @@ namespace Watcher {
 
             Console.WriteLine("Length of Jobs List: {0}", Jobs?.Count);
 
-            if (Jobs != null) {
-                foreach (Job j in Jobs) {
-                    Console.WriteLine("Job URL: {0}", j.Url);
-                    //TODO: Generate list of tasks to await all
-                }
+            if (Jobs == null) {
+                return;
             }
-            
-            //Job j = new();
-            //await j.Run();
+
+            foreach (Job j in Jobs) {
+                jobTasks.Add(j.Run());
+            }
+
+            //NOTE: Do the tasks actually run in parallel here?
+            Task.WaitAll(jobTasks.ToArray());
+
         }        
     }
 }
