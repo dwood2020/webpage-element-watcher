@@ -7,7 +7,7 @@ namespace Watcher {
 
     public class Application {
 
-        public long RunInterval { get; set; }
+        public long IntervalSeconds { get; set; }
 
         public string? DatabasePath { get; set; }
 
