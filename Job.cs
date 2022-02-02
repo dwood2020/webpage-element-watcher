@@ -17,8 +17,8 @@ namespace Watcher {
                 return;
             }
 
-            string content = await WebClient.GetInstance().GetHtml(Url);
-            Console.WriteLine(content);
+            string html = await WebClient.GetInstance().GetHtml(Url);
+            Console.WriteLine(html);
         }
         
     }

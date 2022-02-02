@@ -44,6 +44,9 @@ namespace Watcher {
 
             //NOTE: Do the tasks actually run in parallel here?
             Task.WaitAll(jobTasks.ToArray());
+            //NOTE: this is a sync method and will pause here until all tasks have completed
+
+
 
         }        
     }
