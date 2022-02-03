@@ -48,13 +48,11 @@ namespace Watcher {
                 Task.WaitAll(jobTasks.ToArray());
                 //NOTE: this is a sync method and will pause here until all tasks have completed
 
+                //TODO: Archive Job results in DB
+
                 Thread.Sleep((int)IntervalSeconds * 1000);  //Primitive delay for now
             }
-
-
-
-
-
-        }        
+        }    
+        
     }
 }
