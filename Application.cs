@@ -1,6 +1,7 @@
 using System;
 using Tomlyn;
 using Tomlyn.Model;
+using System.Threading;
 
 
 namespace Watcher {
@@ -19,7 +20,7 @@ namespace Watcher {
 
 
         public Application() {
-            jobTasks = new List<Task>();            
+            jobTasks = new List<Task>();     
          }        
         
 
@@ -29,22 +30,28 @@ namespace Watcher {
                 Console.WriteLine("Hello, {0}", User.Name);
             }
             Console.WriteLine("Mail: {0}", User?.Mail);
-
             Console.WriteLine("DatabasePath: {0}", DatabasePath);
-
             Console.WriteLine("Length of Jobs List: {0}", Jobs?.Count);
 
             if (Jobs == null) {
+                Console.WriteLine("No jobs found. Terminating");
                 return;
             }
 
-            foreach (Job j in Jobs) {
-                jobTasks.Add(j.Run());
+            Console.WriteLine("Entering Run Loop");
+
+            while (true) {
+                foreach (Job j in Jobs) {
+                    jobTasks.Add(j.Run());
+                }
+
+                Task.WaitAll(jobTasks.ToArray());
+                //NOTE: this is a sync method and will pause here until all tasks have completed
+
+                Thread.Sleep((int)IntervalSeconds * 1000);  //Primitive delay for now
             }
 
-            //NOTE: Do the tasks actually run in parallel here?
-            Task.WaitAll(jobTasks.ToArray());
-            //NOTE: this is a sync method and will pause here until all tasks have completed
+
 
 
 
