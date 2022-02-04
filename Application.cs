@@ -31,20 +31,15 @@ namespace Watcher {
         
 
         public void Run() {
-
-            if (User != null && User.Name != null) {                
-                Console.WriteLine("Hello, {0}", User.Name);
-            }
-            Console.WriteLine("Mail: {0}", User?.Mail);
-            Console.WriteLine("DatabasePath: {0}", DatabasePath);
-            Console.WriteLine("Length of Jobs List: {0}", Jobs?.Count);
+                        
+            Logger.GetInstance().Write(String.Format("Length of Jobs List: {0}", Jobs?.Count));
 
             if (Jobs == null) {
-                Console.WriteLine("No jobs found. Terminating");
+                Logger.GetInstance().Write("No jobs found. Terminating");
                 return;
             }
 
-            Console.WriteLine("Entering Run Loop");
+            Logger.GetInstance().Write("Entering Run Loop");
 
             while (true) {
                 foreach (Job j in Jobs) {

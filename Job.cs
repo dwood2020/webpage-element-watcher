@@ -51,12 +51,13 @@ namespace Watcher {
             var nodes = htmlDoc.DocumentNode.SelectNodes(Xpath);
 
             if (nodes == null) {
-                Console.WriteLine("No nodes found");
+                Logger.GetInstance().Write("Job: No nodes found. Returning.");
                 return;
             }
-            Console.WriteLine("Found {0} matching nodes.", nodes.Count);
+            Logger.GetInstance().Write(String.Format("Job: Found {0} matching nodes.", nodes.Count));
+
             foreach (var node in nodes.ToList()) {
-                Console.WriteLine("Matching HTML Node Content: {0}", node.InnerHtml);
+                Logger.GetInstance().Write(String.Format("Matching HTML Node Content: {0}", node.InnerHtml));
             }
         }
         
