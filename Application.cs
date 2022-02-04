@@ -16,11 +16,17 @@ namespace Watcher {
 
         public List<Job>? Jobs { get; set; }
 
+        //TODO: Logger should be owned by Application here! Change this
+        public bool VerboseOutput {
+            get { return Logger.GetInstance().Verbose; }
+            set { Logger.GetInstance().Verbose = value; }
+        }
+
         private List<Task> jobTasks;
 
 
         public Application() {
-            jobTasks = new List<Task>();     
+            jobTasks = new List<Task>();
          }        
         
 
