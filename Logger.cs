@@ -1,29 +1,55 @@
+using System;
+
+
 namespace Watcher {
 
-    public class Logger {
+    /// <summary>
+    /// Extremely simple Logger class. Can definitely be improved.
+    /// </summary>
+    public class Logger : ILogger {
 
-        public bool Verbose { get; set; }
+        public int Verbosity { get; set; }
 
-        private static Logger? instance;
+        public bool ShowXpathQueryResult { get; set; }
 
-        private Logger() {
-            Verbose = false;
+
+        public Logger() { }
+
+        public void Error(string message, params object[] args) {
+            Output(String.Format(message, args), ConsoleColor.Red);
         }
 
-        //TODO: Enable formatting here
-        public void Write(string msg) {
-            if (!Verbose) {
-                return;
+        public void Warning(string message, params object[] args) { 
+            if (Verbosity > 1) {
+                Output(String.Format(message, args), ConsoleColor.Yellow);
             }
-            Console.WriteLine(msg);
+            
         }
 
-        public static Logger GetInstance() {
-            if (instance == null) {
-                instance = new Logger();
+        public void Info(string message, params object[] args) {
+            if (Verbosity > 2) {
+                Output(String.Format(message, args), ConsoleColor.White);
             }
-            return instance;
         }
+
+        public void XpathQueryResult(string jobname, string result) {
+            if (ShowXpathQueryResult || Verbosity > 1) {
+                Output(String.Format("Job \"{0}\" XPath Query Result (Inner HTML): {1}", jobname, result), ConsoleColor.Cyan);
+            }
+        }
+
+        private void Output(string message, ConsoleColor color) {
+            string timestamp = DateTime.Now.ToString("T");
+            string separator = " | ";
+
+            ConsoleColor previousColor = Console.ForegroundColor;
+            if (color != ConsoleColor.White) {
+                Console.ForegroundColor = color;
+            }
+            Console.WriteLine(timestamp + separator + message);
+            Console.ForegroundColor = previousColor;
+            // add file access here?
+        }        
 
     }
 }

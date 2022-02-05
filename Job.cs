@@ -7,29 +7,44 @@ namespace Watcher {
     /// This class represents a watcher job
     /// </summary>
     public class Job {
-        
+
+        /// <summary>
+        /// Descriptive name of the Job. Used for debugging/logging purposes.
+        /// </summary>
+        public string Name { get; set; } = String.Empty;
+
         /// <summary>
         /// The URL to the webpage
         /// </summary>
-        public string? Url { get; set; }
+        public string Url { get; set; } = String.Empty;
 
         /// <summary>
         /// The XPath Query to find the HTML element within the doc
         /// </summary>
-        public string? Xpath { get; set; }
+        public string Xpath { get; set; } = String.Empty;
 
         /// <summary>
         /// The job result: Inner HTML of the XPath Query result
         /// </summary>
-        public string? Result { get; private set; }
+        public string Result { get; private set; } = String.Empty;
 
         private readonly HtmlDocument htmlDoc;
+
+        private ILogger? logger;
 
 
         public Job() {
             htmlDoc = new HtmlDocument();   //TODO: Check if it is ok to use 1 instance for each job Run
-         }
+        }
 
+        // This ctor should actually be used if my design was better
+        public Job(ILogger logger): this() {            
+            SetLogger(logger);
+        }
+
+        public void SetLogger(ILogger logger) {
+            this.logger = logger;
+        }
 
         /// <summary>
         /// Run the Job (Async method)
@@ -50,14 +65,14 @@ namespace Watcher {
             // https://www.w3schools.com/xml/xpath_syntax.asp
             var nodes = htmlDoc.DocumentNode.SelectNodes(Xpath);
 
-            if (nodes == null) {
-                Logger.GetInstance().Write("Job: No nodes found. Returning.");
+            if (nodes == null) {                
+                logger?.Info("Job {0}: No nodes found. Returning.", Name);
                 return;
-            }
-            Logger.GetInstance().Write(String.Format("Job: Found {0} matching nodes.", nodes.Count));
+            }            
+            logger?.Info("Job {0}: Found {1} matching nodes.", Name, nodes.Count);
 
-            foreach (var node in nodes.ToList()) {
-                Logger.GetInstance().Write(String.Format("Matching HTML Node Content: {0}", node.InnerHtml));
+            foreach (var node in nodes.ToList()) {                
+                logger?.XpathQueryResult(Name, node.InnerHtml);
             }
         }
         

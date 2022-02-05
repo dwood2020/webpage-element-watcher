@@ -25,6 +25,7 @@ namespace Watcher {
             try {
                 string fileContent = File.ReadAllText(configFilePath);
                 app = Toml.ToModel<Application>(fileContent);
+                app.Init();
             }
             catch (TomlException e) {
                 Console.WriteLine("TomlException: \n" + e.Message);
