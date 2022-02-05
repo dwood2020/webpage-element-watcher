@@ -15,6 +15,10 @@ This project runs on .NET 6. If `dotnet --version` returns a version number < 6,
 #### Configuration   
 
 The entire application is constructed from the TOML configuration file `app.cfg` (See TOML language specs [here](https://toml.io/en/) if desired).   
+Each webpage and its HTML element that shall be watched is referred to as a `Job`.
+Jobs are continuously executed in periodic intervals.
+[**XPath Syntax**](https://www.w3schools.com/xml/xpath_syntax.asp) is used to identify the HTML page element whos content shall be watched.   
+
 Configuration parameters are briefly explained below:   
 
 - `interval_seconds`: The time interval in which the jobs are executed in seconds (see below). Min. 60.
@@ -25,7 +29,11 @@ Configuration parameters are briefly explained below:
 - **User**: 
 - `name`: User name
 - `mail`: User email address
-- TBC
+- **jobs** (Multiple):  
+- `name`: Descriptive name of the job solely used for debugging/logging
+- `url`: URL to the webpage which shall be watched
+- `xpath`: XPath Syntax to the page element
+
 
 ---
 ### Getting started - Developer  
