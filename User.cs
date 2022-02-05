@@ -16,7 +16,7 @@ namespace Watcher {
         public string Mail { get; set; }
 
         public User() {
-            Mail = "";
+            Mail = "";            
         }
     }
 }

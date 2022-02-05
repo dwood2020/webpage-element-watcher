@@ -28,6 +28,7 @@ namespace Watcher {
         /// </summary>
         public string Result { get; private set; } = String.Empty;
 
+        // every Job has its own HTML document as they can be generally different in each job
         private readonly HtmlDocument htmlDoc;
 
         private ILogger? logger;
@@ -42,6 +43,10 @@ namespace Watcher {
             SetLogger(logger);
         }
 
+        /// <summary>
+        /// Sets the logger dependency.
+        /// </summary>
+        /// <param name="logger">Logger instance</param>
         public void SetLogger(ILogger logger) {
             this.logger = logger;
         }
