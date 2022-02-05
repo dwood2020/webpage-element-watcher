@@ -9,6 +9,7 @@ namespace Watcher {
     /// <summary>
     /// This class acts as factory for the application instance. 
     /// It initialises the instance with the data from the Config file.
+    /// It is implemented as static class as it has no internal state.
     /// </summary>
     public static class ApplicationBuilder {
 
