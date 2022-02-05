@@ -42,3 +42,9 @@ This is a .NET 6 project (Runtime can be downloaded [here](https://dotnet.micros
 Build and run the project on the CLI with `dotnet run`.   
 
 TBC.
+
+---
+### Dependencies   
+
+- [Tomlyn](https://github.com/xoofx/Tomlyn) by Alexandre Mutel (BSD-2)  
+- [HtmlAgilityPack](https://github.com/zzzprojects/html-agility-pack) by ZZZ Projects (MIT)  
