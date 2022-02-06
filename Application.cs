@@ -61,7 +61,7 @@ namespace Watcher {
             }
 
             if (Logger != null && Database != null) {
-                Database.SetLogger(Logger);
+                Database.Init(Logger);
             }
 
             // Don't allow website spamming
@@ -105,7 +105,7 @@ namespace Watcher {
                             Database.InsertJobResult(j.Name, j.NumberResult);
                         }
                         else {
-                            Logger?.Error("Application: Something went wrong on DB insert");
+                            Logger?.Error("Application: Something went wrong on DB insert for job {0}", j.Name);
                         }
                     }
                 }

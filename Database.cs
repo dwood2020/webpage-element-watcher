@@ -16,11 +16,11 @@ namespace Watcher {
 
         public Database() {
             Path = String.Empty;
-            connection = new SqliteConnection();
         }
 
-        public void SetLogger(ILogger logger) {
+        public void Init(ILogger logger) {
             this.logger = logger;
+            connection = new SqliteConnection("Data Source=" + Path);
         }
 
         public void InsertJobResult<T>(string jobName, JobResult<T> result) {
@@ -37,6 +37,7 @@ namespace Watcher {
             cmd.Parameters.AddWithValue("timestamp", result.Timestamp);
             if (result.Content != null) {
                 cmd.Parameters.AddWithValue("content", result.Content.ToString());
+                cmd.ExecuteNonQuery();
             }
             else {
                 logger?.Error("Database: JobResult Content was null. Could not insert record into table {0}", jobName);
