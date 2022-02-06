@@ -20,11 +20,6 @@ namespace Watcher {
         public long IntervalSeconds { get; set; } = 60;
         
         /// <summary>
-        /// File path to the database file
-        /// </summary>
-        public string? DatabasePath { get; set; }
-
-        /// <summary>
         /// Application user. Constructed via CFG input.
         /// </summary>
         public User? User { get; set; }
@@ -33,6 +28,11 @@ namespace Watcher {
         /// Logger. Constructed via CFG input.
         /// </summary>
         public Logger? Logger { get; set; }
+
+        /// <summary>
+        /// Database. Constructed via CFG input.
+        /// </summary>
+        public Database? Database { get; set; }
 
         /// <summary>
         /// All jobs to be performed. Constructed via CFG input.
@@ -71,7 +71,7 @@ namespace Watcher {
         /// Runs the application and enters the worker loop.
         /// </summary>
         public void Run() {
-            
+
             Logger?.Info("Application: Length of Jobs List: {0}", Jobs?.Count ?? 0);
             Logger?.Info("Application: Run Interval: {0} Seconds", IntervalSeconds);
 
