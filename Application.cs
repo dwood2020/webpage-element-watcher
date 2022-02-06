@@ -60,6 +60,10 @@ namespace Watcher {
                 }
             }
 
+            if (Logger != null && Database != null) {
+                Database.SetLogger(Logger);
+            }
+
             // Don't allow website spamming
             if (IntervalSeconds < 60) {
                 Logger?.Warning("Application: Interval is too short. Defaulting to 60 seconds.");
@@ -90,7 +94,21 @@ namespace Watcher {
                 //NOTE: this is a sync method and will pause here until all tasks have completed
                 Task.WaitAll(jobTasks.ToArray());
 
-                //TODO: Archive Job results in DB
+                //TODO: Checking result type and then calling a generic method is nonsense. Overhaul this! (Overhaul Job if neccessary!)
+                // maybe even get rid of result type checking in general? => this would solve the "possible Null ref" warning on result getter access
+                if (Database != null) {
+                    foreach (Job j in Jobs) {
+                        if (j.ResultType == Job.ResultTypeString && j.StringResult != null) {
+                            Database.InsertJobResult(j.Name, j.StringResult);
+                        }
+                        else if (j.NumberResult != null) {
+                            Database.InsertJobResult(j.Name, j.NumberResult);
+                        }
+                        else {
+                            Logger?.Error("Application: Something went wrong on DB insert");
+                        }
+                    }
+                }
                 
                 Thread.Sleep((int)IntervalSeconds * 1000);  //Primitive delay for now - this MUST change when this app receives messages
             }
