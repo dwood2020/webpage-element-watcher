@@ -73,7 +73,7 @@ namespace Watcher {
         public void Run() {
             
             Logger?.Info("Application: Length of Jobs List: {0}", Jobs?.Count ?? 0);
-            Logger?.Info("Application: Run Interval: {0}", IntervalSeconds);
+            Logger?.Info("Application: Run Interval: {0} Seconds", IntervalSeconds);
 
             if (Jobs == null) {                
                 Logger?.Info("Application: No jobs found. Terminating.");
