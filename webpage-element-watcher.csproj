@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.41" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.1" />
     <PackageReference Include="Tomlyn" Version="0.10.1" />
   </ItemGroup>
 

@@ -48,3 +48,4 @@ TBC.
 
 - [Tomlyn](https://github.com/xoofx/Tomlyn) by Alexandre Mutel (BSD-2)  
 - [HtmlAgilityPack](https://github.com/zzzprojects/html-agility-pack) by ZZZ Projects (MIT)  
+- [Microsoft.Data.Sqlite](https://docs.microsoft.com/de-de/dotnet/standard/data/sqlite/?tabs=netcore-cli) by Microsoft  (MIT)
