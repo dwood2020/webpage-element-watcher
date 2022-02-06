@@ -23,15 +23,17 @@ Configuration parameters are briefly explained below:
 (Note that small lettering and snake_case is used throughout the entire config file)    
 
 - `interval_seconds`: The time interval in which the jobs are executed in seconds (see below). Min. 60.
-- `database_path`: TBD 
-**user**: 
+
+**user**:   
 - `name`: User name
-- `mail`: User email address
-**logger**:
+- `mail`: User email address  
+
+**logger**:   
 - `verbosity`: Log verbosity. Set to 1,2, or 3 (1 = only Errors are logged, 2 = Warnings, 3 = Info/All). 
 - `show_xpath_query_result`: Set to `true` or `false` - `true` if the jobs shall output their XPath query results. Use this for testing the provided XPath (see below)  
-**database**: 
+**database**:   
 - `path`: File path to where the database shall be stored. Best keep this local to the executable.
+
 **jobs** (Multiple):  
 - `name`: Descriptive name of the job solely used for debugging/logging
 - `url`: URL to the webpage which shall be watched
