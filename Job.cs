@@ -1,4 +1,5 @@
 using HtmlAgilityPack;
+using System.Text;
 
 
 namespace Watcher {
@@ -124,9 +125,10 @@ namespace Watcher {
             // timestamp of job execution
             string timestamp = DateTime.Now.ToString("G");
 
-            if (ResultType == ResultTypeNumber) {
+            if (ResultType.ToLower() == ResultTypeNumber) {
                 double parseResult = 0.0;
-                if (!Double.TryParse(nodes[0].InnerText, out parseResult)) {
+                string s = PreprocessNumberString(nodes[0].InnerText);
+                if (!Double.TryParse(s, out parseResult)) {
                     logger?.Error("Job {0}: Number result type could not be parsed. Setting 0", Name);
                 }
                 NumberResult = new JobResult<double>(timestamp, parseResult);
@@ -136,9 +138,17 @@ namespace Watcher {
                 StringResult = new JobResult<string>(timestamp, nodes[0].InnerText);
                 logger?.XpathQueryResult(Name, StringResult.ToString());
             }
-            
-            
         }
         
+        private static string PreprocessNumberString(string s) {
+            StringBuilder sb = new();
+
+            foreach (char c in s) {
+                if (c >= '0' && c <= '9' || c == ',' || c == '.') {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
     }
 }
