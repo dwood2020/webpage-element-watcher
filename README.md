@@ -31,10 +31,11 @@ Configuration parameters are briefly explained below:
 **logger**:   
 - `verbosity`: Log verbosity. Set to 1,2, or 3 (1 = only Errors are logged, 2 = Warnings, 3 = Info/All). 
 - `show_xpath_query_result`: Set to `true` or `false` - `true` if the jobs shall output their XPath query results. Use this for testing the provided XPath (see below)  
-**database**:   
+
+**database**:      
 - `path`: File path to where the database shall be stored. Best keep this local to the executable.
 
-**jobs** (Multiple):  
+**jobs** (Multiple):   
 - `name`: Descriptive name of the job solely used for debugging/logging
 - `url`: URL to the webpage which shall be watched
 - `xpath`: XPath Syntax to the page element
