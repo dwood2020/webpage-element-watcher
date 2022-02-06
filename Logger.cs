@@ -61,7 +61,7 @@ namespace Watcher {
         /// <param name="result">XPath query result</param>
         public void XpathQueryResult(string jobname, string result) {
             if (ShowXpathQueryResult || Verbosity > 1) {
-                Output(String.Format("Job \"{0}\" XPath Query Result (Inner HTML): {1}", jobname, result), ConsoleColor.Cyan);
+                Output(String.Format("Job \"{0}\" XPath Query Result: {1}", jobname, result), ConsoleColor.Cyan);
             }
         }
 
