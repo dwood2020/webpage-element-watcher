@@ -1,6 +1,6 @@
 using System.IO;
 using Tomlyn;
-using Tomlyn.Model;
+using Watcher.Config;
 
 
 namespace Watcher {
@@ -22,10 +22,13 @@ namespace Watcher {
         public static Application BuildFromConfig(string configFilePath) {
 
             Application app;
+            ApplicationConfig appConfig;
             try {
                 string fileContent = File.ReadAllText(configFilePath);
-                app = Toml.ToModel<Application>(fileContent);
-                app.Init();
+                // app = Toml.ToModel<Application>(fileContent);
+                // app.Init();
+
+                appConfig = Toml.ToModel<ApplicationConfig>(fileContent);
             }
             catch (TomlException e) {
                 Console.WriteLine("TomlException: \n" + e.Message);
@@ -36,6 +39,26 @@ namespace Watcher {
                 Console.WriteLine("Exception: " + e.Message);
                 throw;
             }
+
+            // build app from config here
+            // note this is no C++ - we can create objects without having to worry about ownership
+
+            // this is really dirty now of course
+            app = new Application();
+            app.Logger = new Logger();
+            app.Database = new Database();
+
+            if (appConfig.Jobs != null) {
+                foreach (JobConfig jc in appConfig.Jobs) {
+                    app.Jobs.Add(new Job() {
+                        Name = jc.Name,
+                        Url = jc.Url,
+                        Xpath = jc.XPath,
+                        ResultType = jc.ResultType
+                    });
+                }    
+            }
+            
 
             return app;
         }
