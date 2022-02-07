@@ -59,6 +59,10 @@ namespace Watcher {
                 }    
             }
             
+            // TODO: CLean this mess up.
+            // Add methods for each class setup which take in config class
+            // call them one by one 
+            // think about dependencies + unit testing => what do i need to hide behind interfaces?
 
             return app;
         }
