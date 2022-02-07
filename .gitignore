@@ -1,6 +1,7 @@
 bin/
 obj/
 .vs/
+*.db
 
 # exclude the actual config from source control for security
 app.cfg
