@@ -66,6 +66,29 @@ namespace Watcher {
 
             return app;
         }
+
+
+        private static ILogger BuildLogger(LoggerConfig config) {
+            //NOTE: The factory actually knows the concrete type and not just the Interface
+            Logger logger = new Logger() {                
+                ShowXpathQueryResult = config.ShowXpathQueryResult,
+            };
+
+            if (Enum.IsDefined(typeof(LoggerVerbosity), config.Verbosity)) { 
+                logger.Verbosity = (LoggerVerbosity)config.Verbosity;
+            }
+
+            return logger;
+        }
+
+        private static Database BuildDatabase(DatabaseConfig config) {
+
+            Database db = new() {
+                Path = config.Path,
+            };
+
+            return db;
+        }
     }
 
 }

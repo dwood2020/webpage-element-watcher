@@ -20,7 +20,7 @@ namespace Watcher.Config {
 
 
     public class DatabaseConfig {
-        public string? Path { get; set; }
+        public string Path { get; set; } = String.Empty;
 
         public DatabaseConfig() { }
     }
