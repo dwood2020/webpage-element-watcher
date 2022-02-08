@@ -42,33 +42,37 @@ namespace Watcher {
 
             // build app from config here
             // note this is no C++ - we can create objects without having to worry about ownership
-
-            // this is really dirty now of course
-            app = new Application();
-            app.Logger = new Logger();
-            app.Database = new Database();
-
-            if (appConfig.Jobs != null) {
-                foreach (JobConfig jc in appConfig.Jobs) {
-                    app.Jobs.Add(new Job() {
-                        Name = jc.Name,
-                        Url = jc.Url,
-                        Xpath = jc.XPath,
-                        ResultType = jc.ResultType
-                    });
-                }    
-            }
             
             // TODO: CLean this mess up.
             // Add methods for each class setup which take in config class
             // call them one by one 
             // think about dependencies + unit testing => what do i need to hide behind interfaces?
+            
+            ILogger logger = BuildLogger(appConfig.Logger);
+
+            IDatabase database = BuildDatabase(logger, appConfig.Database);
+
+
+            //IDEA: 
+            // Build the logger first. Then, inject the logger dependency via ctor in all other components
+            // Do a graceful default fallback init if any config params aren't set
+            // Hold defaults in the classes themselves or in the Config classes ?
+
 
             return app;
         }
 
 
-        private static ILogger BuildLogger(LoggerConfig config) {
+        private static ILogger BuildLogger(LoggerConfig? config) {
+            
+            //TODO: A design decision: Fail with an Exception or handle missing config gracefully
+            // via default parameters?
+
+            if (config == null) {
+                //throw new Exception("Logger config invalid");
+                config = new LoggerConfig();    // use default values here
+            }
+
             //NOTE: The factory actually knows the concrete type and not just the Interface
             Logger logger = new Logger() {                
                 ShowXpathQueryResult = config.ShowXpathQueryResult,
@@ -81,13 +85,13 @@ namespace Watcher {
             return logger;
         }
 
-        private static Database BuildDatabase(DatabaseConfig config) {
+        private static Database BuildDatabase(ILogger logger, DatabaseConfig? config) {
+            
+            if (config == null || config.Path.Length == 0) {
+                throw new Exception("Database config invalid");
+            }
 
-            Database db = new() {
-                Path = config.Path,
-            };
-
-            return db;
+            return new Database(logger, config.Path);
         }
     }
 

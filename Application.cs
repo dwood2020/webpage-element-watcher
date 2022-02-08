@@ -60,10 +60,6 @@ namespace Watcher {
                 }
             }
 
-            if (Logger != null && Database != null) {
-                Database.Init(Logger);
-            }
-
             // Don't allow website spamming
             if (IntervalSeconds < 60) {
                 Logger?.Warning("Application: Interval is too short. Defaulting to 60 seconds.");

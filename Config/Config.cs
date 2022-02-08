@@ -20,14 +20,14 @@ namespace Watcher.Config {
 
 
     public class DatabaseConfig {
-        public string Path { get; set; } = String.Empty;
+        public string Path { get; set; } = "w.db";
 
         public DatabaseConfig() { }
     }
 
     public class LoggerConfig {
-        public long Verbosity { get; set; }
-        public bool ShowXpathQueryResult { get; set; }
+        public long Verbosity { get; set; } = 3;
+        public bool ShowXpathQueryResult { get; set; } = false;
 
         public LoggerConfig() { }
     }

@@ -5,20 +5,22 @@ using System.Text;
 
 namespace Watcher {
 
+    public interface IDatabase {
+        public string Path { get; set; }
 
-    public class Database {
+        public void InsertJobResult<T>(string jobName, JobResult<T> result);
+    }
+
+    public class Database : IDatabase {
 
         public string Path { get; set; }
 
         private SqliteConnection connection;
 
-        private ILogger? logger;
+        private ILogger logger;
 
-        public Database() {
-            Path = String.Empty;
-        }
-
-        public void Init(ILogger logger) {
+        public Database(ILogger logger, string filepath) {
+            Path = filepath;
             this.logger = logger;
             connection = new SqliteConnection("Data Source=" + Path);
         }
