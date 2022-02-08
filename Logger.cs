@@ -3,11 +3,6 @@ using System;
 
 namespace Watcher {
 
-    public enum LoggerVerbosity {
-        Error = 1,
-        Warning = 2,
-        Info = 3,
-    }
 
     /// <summary>
     /// Extremely simple Logger class. Can definitely be improved.
@@ -17,7 +12,7 @@ namespace Watcher {
         /// <summary>
         /// Logger verbosity level. Can be 1, 2, 3 (Error, Warning, Info)
         /// </summary>
-        public LoggerVerbosity Verbosity { get; set; }
+        public int Verbosity { get; set; }
 
         /// <summary>
         /// Print XPath query results (for testing the XPath input) toggle

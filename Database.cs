@@ -11,6 +11,7 @@ namespace Watcher {
         public void InsertJobResult<T>(string jobName, JobResult<T> result);
     }
 
+
     public class Database : IDatabase {
 
         public string Path { get; set; }

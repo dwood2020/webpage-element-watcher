@@ -25,9 +25,6 @@ namespace Watcher {
             ApplicationConfig appConfig;
             try {
                 string fileContent = File.ReadAllText(configFilePath);
-                // app = Toml.ToModel<Application>(fileContent);
-                // app.Init();
-
                 appConfig = Toml.ToModel<ApplicationConfig>(fileContent);
             }
             catch (TomlException e) {
@@ -39,6 +36,9 @@ namespace Watcher {
                 Console.WriteLine("Exception: " + e.Message);
                 throw;
             }
+
+            // check if any nulls / non-defined settings here
+            ValidateConfig(appConfig);
 
             // build app from config here
             // note this is no C++ - we can create objects without having to worry about ownership
@@ -63,24 +63,22 @@ namespace Watcher {
         }
 
 
-        private static ILogger BuildLogger(LoggerConfig? config) {
-            
-            //TODO: A design decision: Fail with an Exception or handle missing config gracefully
-            // via default parameters?
+        private static void ValidateConfig(ApplicationConfig appConfig) { 
+            //TODO: Check if this can be done easier/nicer - this should def. be done somewhere else
+        }
 
-            if (config == null) {
-                //throw new Exception("Logger config invalid");
-                config = new LoggerConfig();    // use default values here
+        private static ILogger BuildLogger(LoggerConfig config) {
+
+            int verbosity = 3;
+            if (config.Verbosity >= 1 && config.Verbosity <= 3) { 
+                verbosity = (int)config.Verbosity;
             }
 
             //NOTE: The factory actually knows the concrete type and not just the Interface
             Logger logger = new Logger() {                
-                ShowXpathQueryResult = config.ShowXpathQueryResult,
+                Verbosity = verbosity,
+                ShowXpathQueryResult = config.ShowXpathQueryResult
             };
-
-            if (Enum.IsDefined(typeof(LoggerVerbosity), config.Verbosity)) { 
-                logger.Verbosity = (LoggerVerbosity)config.Verbosity;
-            }
 
             return logger;
         }

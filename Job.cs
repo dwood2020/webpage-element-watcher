@@ -4,6 +4,16 @@ using System.Text;
 
 namespace Watcher {
 
+    //TODO: Comment this interface
+    public interface IJob<T> {
+        public string Name { get; set; }
+        public string Url { get; set; }
+        public string XPath { get; set; }
+        public JobResult<T> Result { get; protected set; }
+        public Task Run();
+    }
+
+
     /// <summary>
     /// This class represents a Job result which consists of a job execution timestamp and the result value.
     /// </summary>

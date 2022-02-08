@@ -8,7 +8,7 @@ namespace Watcher {
         /// <summary>
         /// User Name
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// User Email address
@@ -16,6 +16,7 @@ namespace Watcher {
         public string Mail { get; set; }
 
         public User() {
+            Name = "";
             Mail = "";            
         }
     }
