@@ -38,33 +38,54 @@ namespace Watcher {
             }
 
             // check if any nulls / non-defined settings here
-            ValidateConfig(appConfig);
+            if (!CheckConfig(appConfig, out string message)) {
+                throw new InvalidDataException(message);
+            }
 
-            // build app from config here
-            // note this is no C++ - we can create objects without having to worry about ownership
+
+            //NOTE: We disable this warning here because null-checks are performed via CheckCofig()
+#pragma warning disable CS8604 // Possible null reference
             
-            // TODO: CLean this mess up.
-            // Add methods for each class setup which take in config class
-            // call them one by one 
-            // think about dependencies + unit testing => what do i need to hide behind interfaces?
-            
+            // Build the logger first
             ILogger logger = BuildLogger(appConfig.Logger);
 
             IDatabase database = BuildDatabase(logger, appConfig.Database);
+            IUser user = BuildUser(appConfig.User);
 
+#pragma warning restore CS8604
 
-            //IDEA: 
-            // Build the logger first. Then, inject the logger dependency via ctor in all other components
-            // Do a graceful default fallback init if any config params aren't set
-            // Hold defaults in the classes themselves or in the Config classes ?
+            List<Job> jobs = new List<Job>();
 
+            foreach (JobConfig jc in appConfig.Jobs) {
+                if (jc.ResultType == JobConfig.ResultTypeNumber) {
+                    jobs.Add(new NumberJob(logger));
+                }
+                else {
+                    jobs.Add(new StringJob(logger));
+                }
+            }
+
+            app = new(logger, database, user, jobs);
 
             return app;
         }
 
-
-        private static void ValidateConfig(ApplicationConfig appConfig) { 
-            //TODO: Check if this can be done easier/nicer - this should def. be done somewhere else
+        private static bool CheckConfig(ApplicationConfig appConfig, out string message) { 
+            // NOTE: This is probably not so nice. Refactor / change concept?
+            if (appConfig.Logger == null) {
+                message = "Logger config not present";
+                return false;
+            }
+            if (appConfig.User == null) {
+                message = "User config not present";
+                return false;
+            }
+            if (appConfig.Database == null) {
+                message = "Database config not present";
+                return false;
+            }
+            message = string.Empty;
+            return true;
         }
 
         private static ILogger BuildLogger(LoggerConfig config) {
@@ -75,7 +96,7 @@ namespace Watcher {
             }
 
             //NOTE: The factory actually knows the concrete type and not just the Interface
-            Logger logger = new Logger() {                
+            Logger logger = new() {                
                 Verbosity = verbosity,
                 ShowXpathQueryResult = config.ShowXpathQueryResult
             };
@@ -83,14 +104,21 @@ namespace Watcher {
             return logger;
         }
 
-        private static Database BuildDatabase(ILogger logger, DatabaseConfig? config) {
-            
-            if (config == null || config.Path.Length == 0) {
-                throw new Exception("Database config invalid");
-            }
-
+        private static IDatabase BuildDatabase(ILogger logger, DatabaseConfig config) {
+            // this is a simple task for now
             return new Database(logger, config.Path);
         }
+
+        private static IUser BuildUser(UserConfig user) {
+
+            User instance = new User() {
+                Name = user.Name,
+                Mail = user.Mail,
+            };
+
+            return (IUser)instance;
+        }
+
     }
 
 }
