@@ -13,7 +13,7 @@ namespace Watcher {
         /// <summary>
         /// User Email address
         /// </summary>
-        public string Email { get; }
+        public string Mail { get; }
     }
 
 
