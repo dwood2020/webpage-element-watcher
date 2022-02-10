@@ -57,12 +57,24 @@ namespace Watcher {
             List<Job> jobs = new List<Job>();
 
             foreach (JobConfig jc in appConfig.Jobs) {
+                Job j;
+
                 if (jc.ResultType == JobConfig.ResultTypeNumber) {
-                    jobs.Add(new NumberJob(logger));
+                    j = new NumberJob(logger) {
+                        Name = jc.Name,
+                        Url = jc.Url,
+                        Xpath = jc.XPath,
+                    };                    
                 }
                 else {
-                    jobs.Add(new StringJob(logger));
+                    j = new StringJob(logger) {
+                        Name = jc.Name,
+                        Url = jc.Url,
+                        Xpath = jc.XPath,
+                    };
                 }
+
+                jobs.Add(j);
             }
 
             app = new(logger, database, user, jobs);

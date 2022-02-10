@@ -20,7 +20,7 @@ namespace Watcher {
     /// <summary>
     /// This class implements the IUser interface.
     /// </summary>
-    public class User {
+    public class User : IUser {
 
         public string Name { get; set; }
 
