@@ -27,7 +27,12 @@ namespace Watcher {
         }
 
         public void InsertJobResult<T>(string jobName, JobResult<T> result) {
-            
+
+            if (result == null) {
+                logger.Error("Database: JobResult was null for Job \"{0}\".", jobName);
+                return;
+            }
+
             string jobnameScrubbed = ScrubSqlParameter(jobName);
             if (jobnameScrubbed.Length == 0) {
                 logger.Error("Database: Job name \"{0}\" was empty after scrubbing. Cannot insert result into database", jobName);

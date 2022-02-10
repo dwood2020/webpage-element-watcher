@@ -76,15 +76,25 @@ namespace Watcher {
                 //NOTE: this is a sync method and will pause here until all tasks have completed
                 Task.WaitAll(jobTasks.ToArray());
 
-                //TODO: Check the POSSIBLE NULL warning! => must be the nullable result
                 foreach (Job j in Jobs) { 
                     if (j is NumberJob) {
                         NumberJob nj = (NumberJob)j;
-                        Database.InsertJobResult(nj.Name, nj.Result);
+                        if (nj.Result != null) {
+                            Database.InsertJobResult(nj.Name, nj.Result);
+                        }
+                        else {
+                            Logger.Warning("Application: NumberJob \"{0}\" Result is null.", nj.Name);
+                        }
+                        
                     }
                     else if (j is StringJob) {
                         StringJob sj = (StringJob)j;
-                        Database.InsertJobResult(sj.Name, sj.Result);
+                        if (sj.Result != null) {
+                            Database.InsertJobResult(sj.Name, sj.Result);
+                        }
+                        else {
+                            Logger.Warning("Application: StringJob \"{0}\" Result is null.", sj.Name);
+                        }
                     }
                     else {
                         Logger.Error("Application: Something went wrong on DB insert for job {0}", j.Name);
@@ -92,7 +102,6 @@ namespace Watcher {
                 }
 
                 Thread.Sleep((int)IntervalSeconds * 1000);  //Primitive delay for now - this MUST change when this app receives messages
-
             }
         }    
         
