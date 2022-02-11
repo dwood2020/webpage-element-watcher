@@ -60,12 +60,15 @@ namespace Watcher {
 
         protected readonly ILogger logger;
 
+        protected readonly IWebClient webClient;
+
         // every Job has its own HTML document as they can be generally different in each job
         protected readonly HtmlDocument htmlDoc;
 
 
-        public Job(ILogger logger) {
+        public Job(ILogger logger, IWebClient webClient) {
             this.logger = logger;
+            this.webClient = webClient;
             htmlDoc = new HtmlDocument();
 
             Name = String.Empty;
@@ -85,7 +88,7 @@ namespace Watcher {
                 return;
             }
 
-            string html = await WebClient.GetInstance().GetHtml(Url);
+            string html = await webClient.GetHtml(Url);
 
             htmlDoc.LoadHtml(html);
             // simply utilise XPath Sysntax here, see
@@ -118,7 +121,7 @@ namespace Watcher {
 
         public JobResult<string>? Result { get; private set; }
 
-        public StringJob(ILogger logger) : base(logger) { }
+        public StringJob(ILogger logger, IWebClient webClient) : base(logger, webClient) { }
 
         protected override void PrepareResult(string timestamp, string htmlResult) {
             Result = new JobResult<string>(timestamp, htmlResult);
@@ -131,7 +134,7 @@ namespace Watcher {
 
         public JobResult<double>? Result { get; private set; }
 
-        public NumberJob(ILogger logger) : base(logger) { }
+        public NumberJob(ILogger logger, IWebClient webClient) : base(logger, webClient) { }
 
         protected override void PrepareResult(string timestamp, string htmlResult) {
             double parseResult = 0.0;

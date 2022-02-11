@@ -2,12 +2,17 @@ using System.Net;
 
 namespace Watcher {
 
+    //TODO: Comment interface
+    public interface IWebClient {
+
+        public Task<string> GetHtml(string url);
+    }
+
+
     // thin, KISS wrapper around .net httpclient as singleton (not nice but easy)
     //TODO: Comment + exchange Singleton patten to be used with Framework Dependency Injection
     //there probably is no real reason to make the Client singleton here 
-    public class WebClient {
-
-        private static WebClient? instance;
+    public class WebClient : IWebClient {        
 
         private HttpClient client;
 
@@ -24,17 +29,6 @@ namespace Watcher {
         public async Task<string> GetHtml(string url) {
             var content = await client.GetStringAsync(url);
             return content;
-        }
-
-        /// <summary>
-        /// Gets the Singleton instance
-        /// </summary>
-        /// <returns>WebClient instance</returns>
-        public static WebClient GetInstance() {
-            if (instance == null) {
-                instance = new WebClient();
-            }
-            return instance;
         }
     }
 

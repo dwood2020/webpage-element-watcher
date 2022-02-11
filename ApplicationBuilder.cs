@@ -48,7 +48,7 @@ namespace Watcher {
             
             // Build the logger first
             ILogger logger = BuildLogger(appConfig.Logger);
-
+            IWebClient webClient = BuildWebClient();
             IDatabase database = BuildDatabase(logger, appConfig.Database);
             IUser user = BuildUser(appConfig.User);
 
@@ -60,14 +60,14 @@ namespace Watcher {
                 Job j;
 
                 if (jc.ResultType == JobConfig.ResultTypeNumber) {
-                    j = new NumberJob(logger) {
+                    j = new NumberJob(logger, webClient) {
                         Name = jc.Name,
                         Url = jc.Url,
                         Xpath = jc.XPath,
                     };                    
                 }
                 else {
-                    j = new StringJob(logger) {
+                    j = new StringJob(logger, webClient) {
                         Name = jc.Name,
                         Url = jc.Url,
                         Xpath = jc.XPath,
@@ -129,6 +129,10 @@ namespace Watcher {
             };
 
             return (IUser)instance;
+        }
+
+        private static IWebClient BuildWebClient() {
+            return new WebClient();
         }
 
     }
