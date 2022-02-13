@@ -1,5 +1,6 @@
 using HtmlAgilityPack;
 using System.Text;
+using System.IO;
 
 
 namespace Watcher {
@@ -58,6 +59,11 @@ namespace Watcher {
         public string Url { get; set; }
 
         /// <summary>
+        /// Path to a local HTML file as alternative to web URL
+        /// </summary>
+        public string LocalPath { get; set; }
+
+        /// <summary>
         /// The XPath Query to find the HTML element within the doc
         /// </summary>
         public string Xpath { get; set; }
@@ -85,6 +91,7 @@ namespace Watcher {
 
             Name = String.Empty;
             Url = String.Empty;
+            LocalPath = String.Empty;
             Xpath = String.Empty;
             TreatAsNumber = false;
         }
@@ -97,11 +104,28 @@ namespace Watcher {
 
             // this can be done in async method, see
             // here: https://stackoverflow.com/questions/25055749/terminate-or-exit-c-sharp-async-method-with-return
-            if (Url.Length == 0 || Xpath.Length == 0) {
+            if (Url.Length == 0 && LocalPath.Length == 0 || Xpath.Length == 0) {
                 return;
             }
 
-            string html = await webClient.GetHtml(Url);
+            string html;
+            if (Url.Length > 0) {
+                html = await webClient.GetHtml(Url);
+            }
+            else if (LocalPath.Length > 0) {
+                // do not throw an exception here if file is not found - this is not critical
+                try {
+                    html = await File.ReadAllTextAsync(LocalPath);
+                }
+                catch {
+                    logger.Error("Job \"{0}\": Could not open local file \"{1}\"", Name, LocalPath);
+                    html = "";
+                }
+            } 
+            else {
+                // this should not happen
+                html = "";
+            }
 
             htmlDoc.LoadHtml(html);
             // simply utilise XPath Sysntax here, see

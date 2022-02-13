@@ -42,6 +42,7 @@ namespace Watcher.Config {
 
         public string Name { get; set; } = string.Empty;
         public string Url { get; set; } = string.Empty;
+        public string LocalPath { get; set; } = string.Empty;
         public string XPath { get; set; } = string.Empty;
         public string ResultType { get; set; } = string.Empty;
 

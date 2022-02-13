@@ -91,6 +91,7 @@ namespace Watcher {
                     List<JobResult> lastJobs = Database.GetLastJobResults(j.Name, 2);
                     if (lastJobs.Count == 2 && !lastJobs[0].IsEqual(lastJobs[1])) {
                         // something has changed, notify
+                        Logger.Info("NOTIFICATION: Job \"{0}\": Content has changed", j.Name);
                     }
 
                 }

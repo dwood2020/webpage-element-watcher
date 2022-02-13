@@ -124,6 +124,7 @@ namespace Watcher {
                 Job j = new(logger, webClient) {
                     Name = jc.Name,
                     Url = jc.Url,
+                    LocalPath = jc.LocalPath,
                     Xpath = jc.XPath,
                 };
 
