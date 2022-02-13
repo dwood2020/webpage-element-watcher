@@ -32,6 +32,10 @@ namespace Watcher {
             Content = content;
         }
 
+        public bool IsEqual(JobResult other) {
+            return string.Compare(this.Content, other.Content, StringComparison.Ordinal) == 0;
+        }
+
         public override string ToString() {
             return "Timestamp: " + Timestamp + "  Content: " + Content;
         }

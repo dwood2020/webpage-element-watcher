@@ -9,6 +9,8 @@ namespace Watcher {
         public string Path { get; set; }
 
         public void InsertJobResult(string jobName, JobResult result);
+
+        public List<JobResult> GetLastJobResults(string jobName, int limit);
     }
 
 

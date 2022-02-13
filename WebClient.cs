@@ -9,9 +9,9 @@ namespace Watcher {
     }
 
 
-    // thin, KISS wrapper around .net httpclient as singleton (not nice but easy)
-    //TODO: Comment + exchange Singleton patten to be used with Framework Dependency Injection
-    //there probably is no real reason to make the Client singleton here 
+    /// <summary>
+    /// This class serves as a thin wrapper around the .NET HttpClient
+    /// </summary>
     public class WebClient : IWebClient {        
 
         private HttpClient client;
@@ -22,7 +22,7 @@ namespace Watcher {
         }
 
         /// <summary>
-        /// Gets the HTML content from a provided URL. Aync method.
+        /// Gets the HTML content from a provided URL. Async method.
         /// </summary>
         /// <param name="url">URL to get content from</param>
         /// <returns>Task object</returns>

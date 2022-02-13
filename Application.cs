@@ -84,7 +84,16 @@ namespace Watcher {
                     else {
                         Logger.Warning("Application: Job \"{0}\" Result is null.", j.Name);
                     }
-                }                
+                }
+
+                // keep yielding and comparing results in separate loops
+                foreach (IJob j in Jobs) {
+                    List<JobResult> lastJobs = Database.GetLastJobResults(j.Name, 2);
+                    if (lastJobs.Count == 2 && !lastJobs[0].IsEqual(lastJobs[1])) {
+                        // something has changed, notify
+                    }
+
+                }
 
                 Thread.Sleep((int)IntervalSeconds * 1000);  //Primitive delay for now - this MUST change when this app receives messages
             }
