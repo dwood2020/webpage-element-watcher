@@ -7,12 +7,12 @@ namespace Watcher {
     //TODO: Comment this interface
     //NOTE: I do not yet understand how I would decouple these job classes for Unit Testing.
     // For now, I will rely on these interfaces and see later when I actually implement the tests
-    public interface IJob<T> {
+    public interface IJob {
         public string Name { get; set; }
         public string Url { get; set; }
         public string Xpath { get; set; }
 
-        public JobResult<T>? Result { get; }
+        public JobResult? Result { get; }
 
         public Task Run();
     }
@@ -22,12 +22,12 @@ namespace Watcher {
     /// This class represents a Job result which consists of a job execution timestamp and the result value.
     /// </summary>
     /// <typeparam name="T">Result type: string (default) or double (called "number")</typeparam>
-    public class JobResult<T> {
+    public class JobResult {
 
         public string Timestamp { get; set; }
-        public T Content { get; set; }
+        public string Content { get; set; }
 
-        public JobResult(string timestamp, T content) {
+        public JobResult(string timestamp, string content) {
             Timestamp = timestamp;
             Content = content;
         }
@@ -41,7 +41,7 @@ namespace Watcher {
     /// <summary>
     /// This class represents a watcher job.
     /// </summary>
-    public abstract class Job {
+    public class Job : IJob {
 
         /// <summary>
         /// Descriptive name of the Job. Used for debugging/logging purposes.
@@ -57,6 +57,14 @@ namespace Watcher {
         /// The XPath Query to find the HTML element within the doc
         /// </summary>
         public string Xpath { get; set; }
+
+        /// <summary>
+        /// For now: Set this flag if the result shall be treated as number
+        /// (This only involves string preprocessing internally)
+        /// </summary>
+        public bool TreatAsNumber { get; set; }
+
+        public JobResult? Result { get; protected set; }
 
         protected readonly ILogger logger;
 
@@ -74,6 +82,7 @@ namespace Watcher {
             Name = String.Empty;
             Url = String.Empty;
             Xpath = String.Empty;
+            TreatAsNumber = false;
         }
 
         /// <summary>
@@ -112,50 +121,43 @@ namespace Watcher {
             PrepareResult(timestamp, nodes[0].InnerText);
         }
 
-        protected abstract void PrepareResult(string timestamp, string htmlResult);
+        protected void PrepareResult(string timestamp, string htmlResult) {
+            string result;
 
-    }
-
-    //TODO: COmment
-    public class StringJob : Job, IJob<string> {
-
-        public JobResult<string>? Result { get; private set; }
-
-        public StringJob(ILogger logger, IWebClient webClient) : base(logger, webClient) { }
-
-        protected override void PrepareResult(string timestamp, string htmlResult) {
-            Result = new JobResult<string>(timestamp, htmlResult);
-            logger.XpathQueryResult(Name, Result.ToString());
-        }
-    }
-
-    //TODO: Comment
-    public class NumberJob : Job, IJob<double> {
-
-        public JobResult<double>? Result { get; private set; }
-
-        public NumberJob(ILogger logger, IWebClient webClient) : base(logger, webClient) { }
-
-        protected override void PrepareResult(string timestamp, string htmlResult) {
-            double parseResult = 0.0;
-            string s = PreprocessNumberString(htmlResult);
-            if (!Double.TryParse(s, out parseResult)) {
-                logger.Error("Job {0}: Number result type could not be parsed. Setting 0", Name);
+            if (TreatAsNumber) {
+                result = PreprocessNumberString(htmlResult);
             }
-            Result = new JobResult<double>(timestamp, parseResult);
+            else {
+                result = PreprocessString(htmlResult);
+            }
+            
+            Result = new JobResult(timestamp, result);
             logger.XpathQueryResult(Name, Result.ToString());
         }
 
-        private static string PreprocessNumberString(string s) {
+        protected string PreprocessString(string s) {
             StringBuilder sb = new();
 
-            foreach (char c in s) {
-                if (c >= '0' && c <= '9' || c == ',' || c == '.') {
+            foreach (char c in s) {                
+                //TODO: Improve - maybe use a Regex?
+                if (c <= sbyte.MaxValue && c != ' ' && c != '\n' && c != '\r') {
                     sb.Append(c);
                 }
             }
             return sb.ToString();
         }
+
+        protected string PreprocessNumberString(string s) {
+            StringBuilder sb = new();
+
+            foreach (char c in s) {
+                if (c >= '0' && c <= '9' || c == '.' || c == ',') {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
+
     }
 
 }

@@ -39,12 +39,12 @@ namespace Watcher {
         /// NOTE: INjecting the logger dependency into the jobs requires a separate call
         /// to Application.Init() after construction.
         /// </summary>
-        public List<Job> Jobs { get; set; }
+        public List<IJob> Jobs { get; set; }
 
         // All job tasks are held here
         private List<Task> jobTasks;
 
-        public Application(ILogger logger, IDatabase database, IUser user, List<Job> jobs) {
+        public Application(ILogger logger, IDatabase database, IUser user, List<IJob> jobs) {
             Logger = logger;
             Database = database;
             User = user;
@@ -75,31 +75,16 @@ namespace Watcher {
 
                 //NOTE: this is a sync method and will pause here until all tasks have completed
                 Task.WaitAll(jobTasks.ToArray());
+                jobTasks.Clear();
 
-                foreach (Job j in Jobs) { 
-                    if (j is NumberJob) {
-                        NumberJob nj = (NumberJob)j;
-                        if (nj.Result != null) {
-                            Database.InsertJobResult(nj.Name, nj.Result);
-                        }
-                        else {
-                            Logger.Warning("Application: NumberJob \"{0}\" Result is null.", nj.Name);
-                        }
-                        
-                    }
-                    else if (j is StringJob) {
-                        StringJob sj = (StringJob)j;
-                        if (sj.Result != null) {
-                            Database.InsertJobResult(sj.Name, sj.Result);
-                        }
-                        else {
-                            Logger.Warning("Application: StringJob \"{0}\" Result is null.", sj.Name);
-                        }
+                foreach (IJob j in Jobs) {
+                    if (j.Result != null) {
+                        Database.InsertJobResult(j.Name, j.Result);
                     }
                     else {
-                        Logger.Error("Application: Something went wrong on DB insert for job {0}", j.Name);
+                        Logger.Warning("Application: Job \"{0}\" Result is null.", j.Name);
                     }
-                }
+                }                
 
                 Thread.Sleep((int)IntervalSeconds * 1000);  //Primitive delay for now - this MUST change when this app receives messages
             }

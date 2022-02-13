@@ -51,31 +51,9 @@ namespace Watcher {
             IWebClient webClient = BuildWebClient();
             IDatabase database = BuildDatabase(logger, appConfig.Database);
             IUser user = BuildUser(appConfig.User);
+            List<IJob> jobs = BuildJobs(logger, webClient, appConfig.Jobs);
 
-#pragma warning restore CS8604
-
-            List<Job> jobs = new List<Job>();
-
-            foreach (JobConfig jc in appConfig.Jobs) {
-                Job j;
-
-                if (jc.ResultType == JobConfig.ResultTypeNumber) {
-                    j = new NumberJob(logger, webClient) {
-                        Name = jc.Name,
-                        Url = jc.Url,
-                        Xpath = jc.XPath,
-                    };                    
-                }
-                else {
-                    j = new StringJob(logger, webClient) {
-                        Name = jc.Name,
-                        Url = jc.Url,
-                        Xpath = jc.XPath,
-                    };
-                }
-
-                jobs.Add(j);
-            }
+#pragma warning restore CS8604            
 
             app = new(logger, database, user, jobs);
 
@@ -94,6 +72,10 @@ namespace Watcher {
             }
             if (appConfig.Database == null) {
                 message = "Database config not present";
+                return false;
+            }
+            if (appConfig.Jobs == null) {
+                message = "No job configs present";
                 return false;
             }
             message = string.Empty;
@@ -133,6 +115,25 @@ namespace Watcher {
 
         private static IWebClient BuildWebClient() {
             return new WebClient();
+        }
+
+        private static List<IJob> BuildJobs(ILogger logger, IWebClient webClient, List<JobConfig> jobConfigs) {
+            List<IJob> jobs = new();
+
+            foreach (JobConfig jc in jobConfigs) {
+                Job j = new(logger, webClient) {
+                    Name = jc.Name,
+                    Url = jc.Url,
+                    Xpath = jc.XPath,
+                };
+
+                if (jc.ResultType == JobConfig.ResultTypeNumber) {
+                    j.TreatAsNumber = true;
+                }
+
+                jobs.Add(j);
+            }
+            return jobs;
         }
 
     }

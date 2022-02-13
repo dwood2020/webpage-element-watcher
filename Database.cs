@@ -8,7 +8,7 @@ namespace Watcher {
     public interface IDatabase {
         public string Path { get; set; }
 
-        public void InsertJobResult<T>(string jobName, JobResult<T> result);
+        public void InsertJobResult(string jobName, JobResult result);
     }
 
 
@@ -26,7 +26,7 @@ namespace Watcher {
             connection = new SqliteConnection("Data Source=" + Path);
         }
 
-        public void InsertJobResult<T>(string jobName, JobResult<T> result) {
+        public void InsertJobResult(string jobName, JobResult result) {
 
             if (result == null) {
                 logger.Error("Database: JobResult was null for Job \"{0}\".", jobName);
@@ -61,7 +61,7 @@ namespace Watcher {
             connection.Close();
         }
 
-        public JobResult<T>? GetLastJobResult<T>(string jobName) {            
+        public JobResult? GetLastJobResult<T>(string jobName) {            
 
             string jobnameScrubbed = ScrubSqlParameter(jobName);
             if (jobnameScrubbed.Length == 0) {
