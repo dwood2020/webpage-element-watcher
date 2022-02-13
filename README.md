@@ -10,11 +10,11 @@ This project serves as a small introduction to .NET 6.
 #### Runtime   
 
 This project runs on .NET 6. If `dotnet --version` returns a version number < 6, install the .NET 6 Runtime from [here](https://dotnet.microsoft.com/en-us/download).  
-(May also work on older versions of .NET / .NET Core but this is not tested.)  
+
 
 #### Configuration   
 
-The entire application is constructed from the TOML configuration file `app.cfg` (See TOML language specs [here](https://toml.io/en/) if desired).   
+The entire application is constructed from a TOML configuration file named `app.cfg` (See TOML language specs [here](https://toml.io/en/) if desired).   
 Each webpage and its HTML element that shall be watched is referred to as a `Job`.
 Jobs are continuously executed in periodic intervals.
 [**XPath Syntax**](https://www.w3schools.com/xml/xpath_syntax.asp) is used to identify the HTML page element whos content shall be watched.   
