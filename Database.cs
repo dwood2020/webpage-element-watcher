@@ -61,43 +61,47 @@ namespace Watcher {
             connection.Close();
         }
 
-        public JobResult? GetLastJobResult<T>(string jobName) {            
+        public List<JobResult> GetLastJobResults(string jobName, int limit) {            
+
+            List<JobResult> results = new();
 
             string jobnameScrubbed = ScrubSqlParameter(jobName);
             if (jobnameScrubbed.Length == 0) {
                 logger.Error("Database: Job name \"{0}\" was empty after scrubbing. Cannot insert result into database", jobName);
-                return null;
+                return results;
             }
 
             connection.Open();
 
             // check if table exists - is this even neccessary??
-            var cmdTableExist = connection.CreateCommand();
-            cmdTableExist.CommandText = @"SELECT name FROM sqlite_master WHERE type='table' AND name='$(tablename)';";
-            cmdTableExist.Parameters.AddWithValue("tablename", jobnameScrubbed);
+            //var cmdTableExist = connection.CreateCommand();
+            //cmdTableExist.CommandText = @"SELECT name FROM sqlite_master WHERE type='table' AND name='$(tablename)';";
+            //cmdTableExist.Parameters.AddWithValue("tablename", jobnameScrubbed);
 
-            using (var reader = cmdTableExist.ExecuteReader()) {
-                if (!reader.Read()) {
-                    logger.Error("Database: table for (scrubbed) Job name \"{0}\" does not exist.", jobnameScrubbed);
-                    return null;
-                }
-            }
+            //using (var reader = cmdTableExist.ExecuteReader()) {
+            //    if (!reader.Read()) {
+            //        logger.Error("Database: table for (scrubbed) Job name \"{0}\" does not exist.", jobnameScrubbed);
+            //        return results;
+            //    }
+            //}
 
-            // get last result
+            // get results
             var cmd = connection.CreateCommand();
-            cmd.CommandText = @"SELECT * FROM " + jobnameScrubbed + " ORDER BY id DESC LIMIT 1;";
+            cmd.CommandText = @"SELECT * FROM " + jobnameScrubbed + " ORDER BY id DESC LIMIT $limit;";
+            cmd.Parameters.AddWithValue("limit", limit);
 
             using (var reader = cmd.ExecuteReader()) {
-                if (reader.Read()) {
-
+                while (reader.Read()) {
                     string timestamp = reader.GetString(1);
+                    string content = reader.GetString(2);
 
-                    //TODO: Continue here
-
+                    results.Add(new JobResult(timestamp, content));
                 }
             }
 
-            return null;    // make it compile
+            connection.Close();
+
+            return results;
         }
 
         private string ScrubSqlParameter(string param) {
