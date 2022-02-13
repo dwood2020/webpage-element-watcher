@@ -61,6 +61,45 @@ namespace Watcher {
             connection.Close();
         }
 
+        public JobResult<T>? GetLastJobResult<T>(string jobName) {            
+
+            string jobnameScrubbed = ScrubSqlParameter(jobName);
+            if (jobnameScrubbed.Length == 0) {
+                logger.Error("Database: Job name \"{0}\" was empty after scrubbing. Cannot insert result into database", jobName);
+                return null;
+            }
+
+            connection.Open();
+
+            // check if table exists - is this even neccessary??
+            var cmdTableExist = connection.CreateCommand();
+            cmdTableExist.CommandText = @"SELECT name FROM sqlite_master WHERE type='table' AND name='$(tablename)';";
+            cmdTableExist.Parameters.AddWithValue("tablename", jobnameScrubbed);
+
+            using (var reader = cmdTableExist.ExecuteReader()) {
+                if (!reader.Read()) {
+                    logger.Error("Database: table for (scrubbed) Job name \"{0}\" does not exist.", jobnameScrubbed);
+                    return null;
+                }
+            }
+
+            // get last result
+            var cmd = connection.CreateCommand();
+            cmd.CommandText = @"SELECT * FROM " + jobnameScrubbed + " ORDER BY id DESC LIMIT 1;";
+
+            using (var reader = cmd.ExecuteReader()) {
+                if (reader.Read()) {
+
+                    string timestamp = reader.GetString(1);
+
+                    //TODO: Continue here
+
+                }
+            }
+
+            return null;    // make it compile
+        }
+
         private string ScrubSqlParameter(string param) {
             StringBuilder sb = new();            
 
