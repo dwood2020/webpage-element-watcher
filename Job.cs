@@ -74,6 +74,8 @@ namespace Watcher {
         /// </summary>
         public bool TreatAsNumber { get; set; }
 
+        public bool IsFaulty { get; set; }
+
         public JobResult? Result { get; protected set; }
 
         protected readonly ILogger logger;
@@ -94,6 +96,7 @@ namespace Watcher {
             LocalPath = String.Empty;
             Xpath = String.Empty;
             TreatAsNumber = false;
+            IsFaulty = false;
         }
 
         /// <summary>

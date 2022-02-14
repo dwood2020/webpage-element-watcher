@@ -48,7 +48,7 @@ namespace Watcher {
             
             // Build the logger first
             ILogger logger = BuildLogger(appConfig.Logger);
-            IWebClient webClient = BuildWebClient();
+            IWebClient webClient = BuildWebClient(logger);
             IDatabase database = BuildDatabase(logger, appConfig.Database);
             IUser user = BuildUser(appConfig.User);
             List<IJob> jobs = BuildJobs(logger, webClient, appConfig.Jobs);
@@ -113,8 +113,8 @@ namespace Watcher {
             return (IUser)instance;
         }
 
-        private static IWebClient BuildWebClient() {
-            return new WebClient();
+        private static IWebClient BuildWebClient(ILogger logger) {
+            return new WebClient(logger);
         }
 
         private static List<IJob> BuildJobs(ILogger logger, IWebClient webClient, List<JobConfig> jobConfigs) {

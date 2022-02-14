@@ -70,11 +70,19 @@ namespace Watcher {
 
             while (true) {
                 foreach (Job j in Jobs) {
-                    jobTasks.Add(j.Run());
+                    if (!j.IsFaulty) {
+                        jobTasks.Add(j.Run());
+                    }
                 }
 
                 //NOTE: this is a sync method and will pause here until all tasks have completed
-                Task.WaitAll(jobTasks.ToArray());
+                try {
+                    Task.WaitAll(jobTasks.ToArray());
+                }
+                catch {
+                    Logger.Error("Job task failed and is set into faulty state.");
+                }
+                
                 jobTasks.Clear();
 
                 foreach (IJob j in Jobs) {

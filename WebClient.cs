@@ -12,11 +12,14 @@ namespace Watcher {
     /// <summary>
     /// This class serves as a thin wrapper around the .NET HttpClient
     /// </summary>
-    public class WebClient : IWebClient {        
+    public class WebClient : IWebClient {
+
+        private ILogger logger;    
 
         private HttpClient client;
 
-        public WebClient() {
+        public WebClient(ILogger logger) {
+            this.logger = logger;
             client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "Console Program");
         }
@@ -27,7 +30,14 @@ namespace Watcher {
         /// <param name="url">URL to get content from</param>
         /// <returns>Task object</returns>
         public async Task<string> GetHtml(string url) {
-            var content = await client.GetStringAsync(url);
+            string content;
+            try {
+                content = await client.GetStringAsync(url);
+            }
+            catch(AggregateException e) {
+                logger.Error("WebClient: Exception: \n" + e.Message);
+                content = "";
+            }
             return content;
         }
     }

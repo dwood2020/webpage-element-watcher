@@ -76,16 +76,16 @@ namespace Watcher {
             connection.Open();
 
             // check if table exists - is this even neccessary??
-            //var cmdTableExist = connection.CreateCommand();
-            //cmdTableExist.CommandText = @"SELECT name FROM sqlite_master WHERE type='table' AND name='$(tablename)';";
-            //cmdTableExist.Parameters.AddWithValue("tablename", jobnameScrubbed);
+            var cmdTableExist = connection.CreateCommand();
+            cmdTableExist.CommandText = @"SELECT name FROM sqlite_master WHERE type='table' AND name='$(tablename)';";
+            cmdTableExist.Parameters.AddWithValue("tablename", jobnameScrubbed);
 
-            //using (var reader = cmdTableExist.ExecuteReader()) {
-            //    if (!reader.Read()) {
-            //        logger.Error("Database: table for (scrubbed) Job name \"{0}\" does not exist.", jobnameScrubbed);
-            //        return results;
-            //    }
-            //}
+            using (var reader = cmdTableExist.ExecuteReader()) {
+               if (!reader.Read()) {
+                   logger.Error("Database: table for (scrubbed) Job name \"{0}\" does not exist.", jobnameScrubbed);
+                   return results;
+               }
+            }
 
             // get results
             var cmd = connection.CreateCommand();
