@@ -119,12 +119,17 @@ namespace Watcher {
                 }
                 catch {
                     logger.Error("Job \"{0}\": Could not open local file \"{1}\"", Name, LocalPath);
-                    html = "";
+                    html = string.Empty;
                 }
             } 
             else {
                 // this should not happen
-                html = "";
+                html = string.Empty;
+            }
+
+            // handle the empty string here in one place
+            if (html.Length == 0) {
+                return;
             }
 
             htmlDoc.LoadHtml(html);
