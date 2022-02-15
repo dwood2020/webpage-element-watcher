@@ -105,6 +105,7 @@ namespace Watcher {
             // this can be done in async method, see
             // here: https://stackoverflow.com/questions/25055749/terminate-or-exit-c-sharp-async-method-with-return
             if (Url.Length == 0 && LocalPath.Length == 0 || Xpath.Length == 0) {
+                Result = null;
                 return;
             }
 
@@ -129,6 +130,7 @@ namespace Watcher {
 
             // handle the empty string here in one place
             if (html.Length == 0) {
+                Result = null;
                 return;
             }
 
