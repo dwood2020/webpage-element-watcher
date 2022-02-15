@@ -72,9 +72,7 @@ namespace Watcher {
         /// For now: Set this flag if the result shall be treated as number
         /// (This only involves string preprocessing internally)
         /// </summary>
-        public bool TreatAsNumber { get; set; }
-
-        public bool IsFaulty { get; set; }
+        public bool TreatAsNumber { get; set; }        
 
         public JobResult? Result { get; protected set; }
 
@@ -95,8 +93,7 @@ namespace Watcher {
             Url = String.Empty;
             LocalPath = String.Empty;
             Xpath = String.Empty;
-            TreatAsNumber = false;
-            IsFaulty = false;
+            TreatAsNumber = false;            
         }
 
         /// <summary>
