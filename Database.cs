@@ -83,6 +83,7 @@ namespace Watcher {
             using (var reader = cmdTableExist.ExecuteReader()) {
                if (!reader.Read()) {
                    logger.Error("Database: table for (scrubbed) Job name \"{0}\" does not exist.", jobnameScrubbed);
+                   connection.Close();
                    return results;
                }
             }
