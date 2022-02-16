@@ -76,6 +76,7 @@ namespace Watcher {
             connection.Open();
 
             // check if table exists - is this even neccessary??
+            //TODO: Pack this into 1 SQL query!
             var cmdTableExist = connection.CreateCommand();
             cmdTableExist.CommandText = @"SELECT name FROM sqlite_master WHERE type='table' AND name='$(tablename)';";
             cmdTableExist.Parameters.AddWithValue("tablename", jobnameScrubbed);
@@ -91,6 +92,7 @@ namespace Watcher {
             // get results
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"SELECT * FROM " + jobnameScrubbed + " ORDER BY id DESC LIMIT $limit;";
+            cmd.Parameters.AddWithValue("tablename", jobnameScrubbed);
             cmd.Parameters.AddWithValue("limit", limit);
 
             using (var reader = cmd.ExecuteReader()) {
