@@ -52,12 +52,12 @@ namespace Watcher {
             var cmd = connection.CreateCommand();
             cmd.CommandText = @"INSERT INTO " + jobnameScrubbed + "(timestamp, content) VALUES ($timestamp, $content);";
             cmd.Parameters.AddWithValue("timestamp", result.Timestamp);
-            if (result.Content != null) {
-                cmd.Parameters.AddWithValue("content", result.Content.ToString());
+            if (result.Content != null && result.Content.Length > 0) {
+                cmd.Parameters.AddWithValue("content", result.Content);
                 cmd.ExecuteNonQuery();
             }
             else {
-                logger.Error("Database: JobResult Content was null. Could not insert record into table {0}", jobName);
+                logger.Error("Database: JobResult Content was null or empty. Could not insert record into table {0}", jobName);
             }
 
             connection.Close();
