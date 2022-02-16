@@ -99,6 +99,7 @@ namespace Watcher {
                     if (j.Result == null) {
                         continue;
                     }
+                    
                     List<JobResult> lastJobs = Database.GetLastJobResults(j.Name, 2);
                     if (lastJobs.Count == 2 && !lastJobs[0].IsEqual(lastJobs[1])) {
                         // something has changed, notify
