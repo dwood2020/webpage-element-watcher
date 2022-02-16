@@ -178,7 +178,7 @@ namespace Watcher {
 
             foreach (char c in s) {                
                 //TODO: Improve - maybe use a Regex?
-                if (c <= sbyte.MaxValue && c != ' ' && c != '\n' && c != '\r') {
+                if (c <= sbyte.MaxValue && c != '\n' && c != '\r') {
                     sb.Append(c);
                 }
             }
