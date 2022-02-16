@@ -94,6 +94,11 @@ namespace Watcher {
 
                 // keep yielding and comparing results in separate loops
                 foreach (IJob j in Jobs) {
+                    // for now we skip Jobs whos last result was null
+                    // as the did not contribute a new db entry and any difference would have been detected earlier
+                    if (j.Result == null) {
+                        continue;
+                    }
                     List<JobResult> lastJobs = Database.GetLastJobResults(j.Name, 2);
                     if (lastJobs.Count == 2 && !lastJobs[0].IsEqual(lastJobs[1])) {
                         // something has changed, notify
