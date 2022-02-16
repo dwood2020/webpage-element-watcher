@@ -5,9 +5,9 @@ using System.IO;
 
 namespace Watcher {
 
-    //TODO: Comment this interface
-    //NOTE: I do not yet understand how I would decouple these job classes for Unit Testing.
-    // For now, I will rely on these interfaces and see later when I actually implement the tests
+    /// <summary>
+    /// This is the general Job interface
+    /// </summary>
     public interface IJob {
         public string Name { get; set; }
         public string Url { get; set; }
@@ -21,8 +21,7 @@ namespace Watcher {
 
     /// <summary>
     /// This class represents a Job result which consists of a job execution timestamp and the result value.
-    /// </summary>
-    /// <typeparam name="T">Result type: string (default) or double (called "number")</typeparam>
+    /// </summary>    
     public class JobResult {
 
         public string Timestamp { get; set; }
@@ -74,6 +73,10 @@ namespace Watcher {
         /// </summary>
         public bool TreatAsNumber { get; set; }        
 
+        /// <summary>
+        /// The last Job result. 
+        /// Is null if no result / last Job run failed.
+        /// </summary>
         public JobResult? Result { get; protected set; }
 
         protected readonly ILogger logger;
