@@ -1,5 +1,6 @@
 using MailKit;
 using MailKit.Net.Smtp;
+using MimeKit;
 
 
 namespace Watcher {
@@ -12,17 +13,46 @@ namespace Watcher {
 
         private string server;
         private int port;
-        private string addr;
+        
         private string pw;
 
-        private IUser user;
+        private MailboxAddress sender;
+        private MailboxAddress recipient;
 
-        public MailClient(string server, int port, string addr, string pw, IUser user) {
+        private ILogger logger;
+
+        public MailClient(ILogger logger, string server, int port, string clientName, string clientAddr, string pw, IUser user) {
             this.server = server;
-            this.port = port;
-            this.addr = addr;
+            this.port = port;            
             this.pw = pw;
-            this.user = user;
+            sender = new MailboxAddress(clientName, clientAddr);
+            recipient = new MailboxAddress(user.Name, user.Mail);
+
+            this.logger = logger;
+        }
+
+
+        public void SendMessage(string subject, string message) {
+            using var client = new SmtpClient();
+
+            try {
+                client.Connect(server, port, true);
+                client.Authenticate(sender.Address, pw);
+
+                var msg = new MimeMessage();
+                msg.From.Add(sender);
+                msg.To.Add(recipient);
+                msg.Subject = subject;
+                msg.Body = new TextPart("plain") {
+                    Text = message,
+                };
+
+                client.Send(msg);
+            }
+            catch (Exception ex) { 
+                logger.Error("MailClient: SendMessage failed - Exception ocurred:\n" + ex.ToString());
+            }
+            
         }
     }
 }
