@@ -78,6 +78,7 @@ namespace Watcher {
                 message = "No job configs present";
                 return false;
             }
+            
             message = string.Empty;
             return true;
         }
@@ -111,6 +112,10 @@ namespace Watcher {
             };
 
             return (IUser)instance;
+        }
+
+        private static IWebClient BuildWebClient(IUser user, WebClientConfig config) {
+            //TODO: Here
         }
 
         private static IWebClient BuildWebClient(ILogger logger) {

@@ -21,11 +21,11 @@ namespace Watcher {
 
         private ILogger logger;
 
-        public MailClient(ILogger logger, string server, int port, string clientName, string clientAddr, string pw, IUser user) {
+        public MailClient(ILogger logger, string server, int port, string name, string addr, string pw, IUser user) {
             this.server = server;
             this.port = port;            
             this.pw = pw;
-            sender = new MailboxAddress(clientName, clientAddr);
+            sender = new MailboxAddress(name, addr);
             recipient = new MailboxAddress(user.Name, user.Mail);
 
             this.logger = logger;
