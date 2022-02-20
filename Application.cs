@@ -124,7 +124,7 @@ namespace Watcher {
 
             string subject = "Change notification";
             string msg = String.Format("Hi {0}! \nChange notification for job \"{1}\":\n\n", User.Name, job.Name);
-            msg += String.Format("Old record: {0}\nNew record: {1}\n", resultsDiff[0].ToString(), resultsDiff[1].ToString());
+            msg += String.Format("New record: {0}\nOld record: {1}\n", resultsDiff[0].ToString(), resultsDiff[1].ToString());
             msg += "\nRegards :)";
 
             MailClient.SendMessage(subject, msg);
