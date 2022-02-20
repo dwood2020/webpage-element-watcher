@@ -109,15 +109,10 @@ namespace Watcher {
                     List<JobResult> lastJobs = Database.GetLastJobResults(j.Name, 2);
                     if (lastJobs.Count == 2 && !lastJobs[0].IsEqual(lastJobs[1])) {
                         // something has changed, notify
-                        
+                        SendHasChangedNotification(j, lastJobs);
                     }
 
                 }
-
-                // Caveman debugging here
-                Logger.Info("MailClient: server: {0}   port: {1}", ((MailClient)MailClient).server, ((MailClient)MailClient).port);
-                MailClient.SendMessage("Test msg", "Hello, this is a test msg from WebClient!");
-
 
                 Thread.Sleep((int)IntervalSeconds * 1000);  //Primitive delay for now - this MUST change when this app receives messages
             }
@@ -126,7 +121,13 @@ namespace Watcher {
 
         private void SendHasChangedNotification(IJob job, List<JobResult> resultsDiff) {
             Logger.Info("NOTIFICATION: Job \"{0}\": Content has changed", job.Name);
-            
+
+            string subject = "Change notification";
+            string msg = String.Format("Hi {0}! \nChange notification for job \"{1}\":\n\n", User.Name, job.Name);
+            msg += String.Format("Old record: {0}\nNew record: {1}\n", resultsDiff[0].ToString(), resultsDiff[1].ToString());
+            msg += "\nRegards :)";
+
+            MailClient.SendMessage(subject, msg);
         }
         
     }
