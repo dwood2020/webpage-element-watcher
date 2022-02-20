@@ -51,11 +51,12 @@ namespace Watcher {
             IWebClient webClient = BuildWebClient(logger);
             IDatabase database = BuildDatabase(logger, appConfig.Database);
             IUser user = BuildUser(appConfig.User);
+            IMailClient mailClient = BuildMailClient(logger, user, appConfig.MailClient);
             List<IJob> jobs = BuildJobs(logger, webClient, appConfig.Jobs);
 
 #pragma warning restore CS8604            
 
-            app = new(logger, database, user, jobs);
+            app = new(logger, database, user, mailClient, jobs);
 
             return app;
         }
@@ -74,11 +75,15 @@ namespace Watcher {
                 message = "Database config not present";
                 return false;
             }
+            if (appConfig.MailClient == null) {
+                message = "Mail client config not present";
+                return false;
+            }
             if (appConfig.Jobs == null) {
                 message = "No job configs present";
                 return false;
             }
-            
+                        
             message = string.Empty;
             return true;
         }
@@ -114,8 +119,8 @@ namespace Watcher {
             return (IUser)instance;
         }
 
-        private static IWebClient BuildWebClient(IUser user, WebClientConfig config) {
-            //TODO: Here
+        private static IMailClient BuildMailClient(ILogger logger, IUser user, MailClientConfig config) {
+            return new MailClient(logger, config.Server, config.Port, config.Name, config.Address, config.Password, user);
         }
 
         private static IWebClient BuildWebClient(ILogger logger) {

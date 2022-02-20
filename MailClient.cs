@@ -1,18 +1,26 @@
 using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
+using MailKit.Security;
 
 
 namespace Watcher {
+
+
+    public interface IMailClient {
+
+        public void SendMessage(string subject, string message);
+    }
+
 
     /// <summary>
     /// This is a very simple SMTP client wrapper,
     /// used for quick and dirty mail messaging.     
     /// </summary>
-    public class MailClient {
+    public class MailClient : IMailClient {
 
-        private string server;
-        private int port;
+        public string server;
+        public int port;
         
         private string pw;
 
@@ -36,7 +44,7 @@ namespace Watcher {
             using var client = new SmtpClient();
 
             try {
-                client.Connect(server, port, true);
+                client.Connect(server, port, SecureSocketOptions.StartTls);
                 client.Authenticate(sender.Address, pw);
 
                 var msg = new MimeMessage();
@@ -49,7 +57,8 @@ namespace Watcher {
 
                 client.Send(msg);
             }
-            catch (Exception ex) { 
+            catch (Exception ex) {
+                // NOTE: Catch all exceptions locally here to keep running
                 logger.Error("MailClient: SendMessage failed - Exception ocurred:\n" + ex.ToString());
             }
             

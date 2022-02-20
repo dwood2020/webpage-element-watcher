@@ -5,6 +5,7 @@ namespace Watcher.Config {
         public LoggerConfig? Logger { get; set; }
         public UserConfig? User { get; set; }
         public DatabaseConfig? Database { get; set; }
+        public MailClientConfig? MailClient { get; set; }
         public List<JobConfig> Jobs { get; set; }
 
         public ApplicationConfig() {

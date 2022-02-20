@@ -33,6 +33,11 @@ namespace Watcher {
         /// Database. Constructed via CFG input.
         /// </summary>
         public IDatabase Database { get; private set; }
+        
+        /// <summary>
+        /// Simple mail client to be used for notifications (for now)
+        /// </summary>
+        public IMailClient MailClient { get; private set; }
 
         /// <summary>
         /// All jobs to be performed. Constructed via CFG input.
@@ -44,10 +49,11 @@ namespace Watcher {
         // All job tasks are held here
         private List<Task> jobTasks;
 
-        public Application(ILogger logger, IDatabase database, IUser user, List<IJob> jobs) {
+        public Application(ILogger logger, IDatabase database, IUser user, IMailClient mailClient, List<IJob> jobs) {
             Logger = logger;
             Database = database;
             User = user;
+            MailClient = mailClient;
             Jobs = jobs;
             jobTasks = new List<Task>();
         }
@@ -103,14 +109,25 @@ namespace Watcher {
                     List<JobResult> lastJobs = Database.GetLastJobResults(j.Name, 2);
                     if (lastJobs.Count == 2 && !lastJobs[0].IsEqual(lastJobs[1])) {
                         // something has changed, notify
-                        Logger.Info("NOTIFICATION: Job \"{0}\": Content has changed", j.Name);
+                        
                     }
 
                 }
 
+                // Caveman debugging here
+                Logger.Info("MailClient: server: {0}   port: {1}", ((MailClient)MailClient).server, ((MailClient)MailClient).port);
+                MailClient.SendMessage("Test msg", "Hello, this is a test msg from WebClient!");
+
+
                 Thread.Sleep((int)IntervalSeconds * 1000);  //Primitive delay for now - this MUST change when this app receives messages
             }
-        }    
+        }
+
+
+        private void SendHasChangedNotification(IJob job, List<JobResult> resultsDiff) {
+            Logger.Info("NOTIFICATION: Job \"{0}\": Content has changed", job.Name);
+            
+        }
         
     }
 }
