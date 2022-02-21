@@ -26,7 +26,7 @@ The demo file is well commented and intended to be used as reference.
 ---
 ### Getting started - Developer  
 
-This is a .NET 6 project (Runtime can be downloaded [here](https://dotnet.microsoft.com/en-us/download)).   
+This is a .NET 6 project (SDK can be downloaded [here](https://dotnet.microsoft.com/en-us/download)).   
 Build and run the project on the CLI with `dotnet run`.   
 
 TBC.
