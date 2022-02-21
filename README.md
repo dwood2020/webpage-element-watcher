@@ -1,8 +1,9 @@
 # Webpage Element Watcher
 
 A simple .NET 6 console application which periodically watches specific HTML elements on the web.  
-Only works for static websites which rely on server-side page rendering.   
-This project serves as a small introduction to .NET 6.  
+Only works for static websites which rely on server-side page rendering.  
+
+This project was originally a request and now also serves as a small introduction to .NET 6.  
 
 ---
 ### Getting started - User   

@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Reflection;
 using Watcher;
+
 
 var previousColor = Console.ForegroundColor;
 Console.ForegroundColor = ConsoleColor.Green;
-Console.WriteLine("Webpage Element Watcher 0.0.1");
-Console.WriteLine("-----------------------------\n");
+Console.WriteLine("-------------------------");
+Console.WriteLine(" Webpage Element Watcher");
+Console.WriteLine(" Version " + Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version);
+Console.WriteLine("-------------------------\n");
 Console.ForegroundColor = previousColor;
 
 try {

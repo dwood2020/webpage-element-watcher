@@ -6,6 +6,9 @@
     <RootNamespace>Watcher</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyFileVersion>1.0.0</AssemblyFileVersion>
+    <Version>1.0.0-initialrelease</Version>
   </PropertyGroup>
 
   <ItemGroup>
