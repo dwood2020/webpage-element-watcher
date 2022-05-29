@@ -19,6 +19,7 @@ namespace Watcher {
         /// </summary>
         /// <param name="configFilePath">Path to config file</param>
         /// <returns>Application instance</returns>
+        /// <throws>InvalidDataException if config input is invalid</throws>
         public static Application BuildFromConfig(string configFilePath) {
 
             Application app;

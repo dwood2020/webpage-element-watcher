@@ -15,7 +15,7 @@ try {
     var app = ApplicationBuilder.BuildFromConfig(@"app.cfg");
     app.Run();
 }
-catch(Exception e) {
+catch(InvalidDataException e) {
     Console.WriteLine(e);
     Console.WriteLine(e.Message);
     
